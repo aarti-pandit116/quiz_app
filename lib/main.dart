@@ -1,64 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/screens/question_screen.dart';
+import 'package:quiz_app/screens/result_screen.dart';
+import 'package:quiz_app/screens/start_screen.dart';
+import 'package:quiz_app/data/questions.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(QuizScreen());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class QuizScreen extends StatefulWidget {
+  const QuizScreen({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  State<QuizScreen> createState() => _QuizScreenState();
+}
+
+class _QuizScreenState extends State<QuizScreen> {
+  Widget? activeScreen;
+  List<String> selectedAnswers = [];
+
+  @override
+  void initState() {
+    activeScreen = StartScreen(onSwitchScreen: switchScreen);
+    super.initState();
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  void chooseAnswer(String answer) {
+    selectedAnswers.add(answer);
+    if (selectedAnswers.length == questions.length) {
+      setState(() {
+        activeScreen = ResultScreen(
+            chosenAnswers: selectedAnswers, onRestart: restartQuiz);
+        selectedAnswers = []; // Reset for next time or show results
+      });
+    }
+  }
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  void restartQuiz() {
     setState(() {
+      selectedAnswers = [];
+      activeScreen = StartScreen(onSwitchScreen: switchScreen);
+    });
+  }
+
+  void switchScreen() {
+    setState(() {
+      activeScreen = QuestionScreen(onSelectAnswer: chooseAnswer);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.deepOrange, Colors.orangeAccent],
             ),
-          ],
+          ),
+          child: activeScreen,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
