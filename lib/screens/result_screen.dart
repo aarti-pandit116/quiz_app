@@ -90,10 +90,7 @@ class _ResultScreenState extends State<ResultScreen> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFFF512F),
-                  Color(0xFFDD2476),
-                ], // Bright creative gradient
+                colors: [Colors.deepOrange, Colors.orangeAccent],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -136,7 +133,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     _showAnswersAndAd();
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: const Color(0xFFDD2476),
+                    foregroundColor: Colors.deepOrange,
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
